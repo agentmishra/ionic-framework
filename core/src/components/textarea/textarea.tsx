@@ -195,7 +195,12 @@ export class Textarea implements ComponentInterface {
    */
   @Event() ionFocus!: EventEmitter<FocusEvent>;
 
-  connectedCallback() {
+  async connectedCallback() {
+    // TODO: connectedCallback is fired in CE build
+    // before WC is defined. This needs to be fixed in Stencil.
+    if (typeof (customElements as any) !== 'undefined') {
+      await customElements.whenDefined('ion-textarea');
+    }
     this.emitStyle();
     this.debounceChanged();
     if (Build.isBrowser) {

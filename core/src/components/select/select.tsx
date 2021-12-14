@@ -141,6 +141,11 @@ export class Select implements ComponentInterface {
   }
 
   async connectedCallback() {
+    // TODO: connectedCallback is fired in CE build
+    // before WC is defined. This needs to be fixed in Stencil.
+    if (typeof (customElements as any) !== 'undefined') {
+      await customElements.whenDefined('ion-select');
+    }
     this.updateOverlayOptions();
     this.emitStyle();
 
@@ -416,7 +421,7 @@ export class Select implements ComponentInterface {
         }
       ],
       cssClass: ['select-alert', interfaceOptions.cssClass,
-                 (this.multiple ? 'multiple-select-alert' : 'single-select-alert')]
+        (this.multiple ? 'multiple-select-alert' : 'single-select-alert')]
     };
     return alertController.create(alertOpts);
   }
